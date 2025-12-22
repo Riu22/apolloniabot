@@ -1,7 +1,6 @@
 services:
   apolloniabot:
     build: .
-    container_name: apolloniabot
     environment:
       NODE_ENV: ${NODE_ENV}
       TOKEN: ${TOKEN}
