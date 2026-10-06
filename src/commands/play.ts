@@ -1,5 +1,8 @@
 import {
+  ActionRowBuilder,
   AutocompleteInteraction,
+  ButtonBuilder,
+  ButtonStyle,
   ChatInputCommandInteraction,
   Colors,
   EmbedBuilder,
@@ -42,6 +45,30 @@ export const autocomplete = async function (
   );
 };
 
+export const buildControlPanel = (paused = false) =>
+  new ActionRowBuilder<ButtonBuilder>().addComponents(
+    new ButtonBuilder()
+      .setCustomId("/pause")
+      .setEmoji(paused ? "▶️" : "⏸️")
+      .setStyle(paused ? ButtonStyle.Success : ButtonStyle.Secondary),
+    new ButtonBuilder()
+      .setCustomId("/next")
+      .setEmoji("⏭️")
+      .setStyle(ButtonStyle.Secondary),
+    new ButtonBuilder()
+      .setCustomId("/stop")
+      .setEmoji("⏹️")
+      .setStyle(ButtonStyle.Danger),
+    new ButtonBuilder()
+      .setCustomId("/volume volume:")
+      .setEmoji("🔊")
+      .setStyle(ButtonStyle.Secondary),
+    new ButtonBuilder()
+      .setCustomId("/queue")
+      .setEmoji("📋")
+      .setStyle(ButtonStyle.Secondary),
+  );
+
 export const execute = async function (
   interaction: ChatInputCommandInteraction,
 ) {
@@ -69,9 +96,11 @@ export const execute = async function (
             new URLSearchParams({ search_query: query }),
           )}`,
         );
+
   const interactionResponse = interaction
     .reply({
       embeds: [new EmbedBuilder().setDescription(`Searching "${searchUrl}"`)],
+      components: [buildControlPanel()],
     })
     .catch(() => null);
 

@@ -1,5 +1,6 @@
 import {
   ActionRowBuilder,
+  ButtonInteraction,
   ChatInputCommandInteraction,
   Colors,
   EmbedBuilder,
@@ -24,7 +25,10 @@ export const data = new SlashCommandBuilder()
   .setContexts(InteractionContextType.Guild);
 
 export const execute = async function (
-  interaction: ChatInputCommandInteraction | StringSelectMenuInteraction,
+  interaction:
+    | ChatInputCommandInteraction
+    | StringSelectMenuInteraction
+    | ButtonInteraction,
 ) {
   const queue = player.queues.get(interaction.guildId as string);
   if (!queue) {
@@ -34,17 +38,40 @@ export const execute = async function (
           .setDescription("Nothing is playing")
           .setColor(Colors.Red),
       ],
+      
     });
   }
 
-  const volume =
-    interaction.type === InteractionType.ApplicationCommand
-      ? interaction.options.getInteger("volume")
-      : Number(interaction.values[0]);
-  if (volume != null) {
+  // Si viene de un select menu, aplicar el volumen seleccionado
+  if (interaction.type === InteractionType.MessageComponent && interaction.isStringSelectMenu()) {
+    const volume = Number(interaction.values[0]);
     queue.setVolume(volume);
+    const components = [
+      new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
+        new StringSelectMenuBuilder()
+          .setCustomId("/volume volume:")
+          .setPlaceholder(`Volume: ${queue.volume}`)
+          .addOptions(
+            ["0", "25", "50", "75", "100"].map((value) => ({
+              default: queue.volume === Number(value),
+              label: `Volume: ${value}`,
+              value,
+            })),
+          ),
+      ),
+    ];
+    return interaction.update({ components });
   }
 
+  // Si viene de comando slash con valor, aplicarlo
+  if (interaction.type === InteractionType.ApplicationCommand) {
+    const volume = (interaction as ChatInputCommandInteraction).options.getInteger("volume");
+    if (volume != null) {
+      queue.setVolume(volume);
+    }
+  }
+
+  // Mostrar el menú de selección de volumen (botón o comando sin valor)
   const components = [
     new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
       new StringSelectMenuBuilder()
@@ -59,7 +86,5 @@ export const execute = async function (
         ),
     ),
   ];
-  return interaction.type === InteractionType.ApplicationCommand
-    ? interaction.reply({ components })
-    : interaction.update({ components });
+  return interaction.reply({ components,  });
 };

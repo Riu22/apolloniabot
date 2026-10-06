@@ -8,7 +8,6 @@ import {
   Events,
   Interaction,
   MessageComponentInteraction,
-  MessageFlags,
 } from "discord.js";
 import { DisTubeError } from "distube";
 import commands from "../commands/index.js";
@@ -46,28 +45,10 @@ export const listener = function (interaction: Interaction) {
     const command = commands[commandName as keyof typeof commands] as {
       autocomplete(interaction: AutocompleteInteraction): Promise<void>;
     };
-    command.autocomplete(interaction).catch(() => interaction.respond([]));
+    command.autocomplete(interaction).catch(() => {
+      interaction.respond([]).catch(() => undefined);
+    });
     return;
-  }
-
-  if (interaction.isMessageComponent()) {
-    if (
-      interaction.user.id !== interaction.message.interactionMetadata?.user.id
-    ) {
-      interaction
-        .reply({
-          embeds: [
-            new EmbedBuilder()
-              .setDescription(
-                `You can't interact with the command of another user.`,
-              )
-              .setColor(Colors.Red),
-          ],
-          flags: MessageFlags.Ephemeral,
-        })
-        .catch(console.error);
-      return;
-    }
   }
 
   if (interaction.isChatInputCommand() || interaction.isMessageComponent()) {

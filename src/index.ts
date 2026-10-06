@@ -3,6 +3,7 @@ import events from "./events/index.js";
 import playerEvents from "./events/player/index.js";
 import client from "./client.js";
 import player from "./player.js";
+import "./web.js";
 
 Object.values(events).forEach(({ event, listener }) => {
   client.on(event as string, listener);

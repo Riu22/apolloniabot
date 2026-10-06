@@ -1,4 +1,5 @@
 import {
+  ButtonInteraction,
   ChatInputCommandInteraction,
   Colors,
   EmbedBuilder,
@@ -7,6 +8,7 @@ import {
   hyperlink,
 } from "discord.js";
 import player from "../player.js";
+import { buildControlPanel } from "./play.js";
 
 export const data = new SlashCommandBuilder()
   .setName("pause")
@@ -14,16 +16,34 @@ export const data = new SlashCommandBuilder()
   .setContexts(InteractionContextType.Guild);
 
 export const execute = async function (
-  interaction: ChatInputCommandInteraction,
+  interaction: ChatInputCommandInteraction | ButtonInteraction,
 ) {
   const queue = player.queues.get(interaction.guildId as string);
-  if (!queue || queue.paused || queue.stopped) {
+
+  // Si está pausado, reanudar
+  if (queue?.paused) {
+    await queue.resume();
+    return interaction.reply({
+      embeds: [
+        new EmbedBuilder().setDescription(
+          `▶️ Resumed ${hyperlink(
+            queue.songs[0].name || queue.songs[0].url || "",
+            queue.songs[0].url || "",
+          )}`,
+        ),
+      ],
+      components: [buildControlPanel(false)],
+    });
+  }
+
+  if (!queue || queue.stopped) {
     return interaction.reply({
       embeds: [
         new EmbedBuilder()
           .setDescription("Nothing to pause")
           .setColor(Colors.Red),
       ],
+      
     });
   }
 
@@ -31,11 +51,12 @@ export const execute = async function (
   return interaction.reply({
     embeds: [
       new EmbedBuilder().setDescription(
-        `Paused ${hyperlink(
+        `⏸️ Paused ${hyperlink(
           queue.songs[0].name || queue.songs[0].url || "",
           queue.songs[0].url || "",
         )} at ${queue.formattedCurrentTime}`,
       ),
     ],
+    components: [buildControlPanel(true)],
   });
 };

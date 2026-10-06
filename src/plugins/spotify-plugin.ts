@@ -27,7 +27,7 @@ export class SpotifyPlugin extends InfoExtractorPlugin {
   regExp: RegExp;
 
   constructor({
-    regExp = /^https?:\/\/(open|play)\.spotify\.com\/(?<type>album|artist|episode|playlist|show|track)\/(?<id>[a-zA-Z0-9]+)\??.*$/,
+    regExp = /^https?:\/\/(open|play)\.spotify\.com\/(intl-[a-z]+\/)?(?<type>album|artist|episode|playlist|show|track)\/(?<id>[a-zA-Z0-9]+)\??.*$/,
   } = {}) {
     super();
     this.regExp = regExp;

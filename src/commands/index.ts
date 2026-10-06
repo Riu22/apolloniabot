@@ -3,6 +3,7 @@ import * as help from "./help.js";
 import * as move from "./move.js";
 import * as next from "./next.js";
 import * as now from "./now.js";
+import * as nowplaying from "./nowplaying.js";
 import * as pause from "./pause.js";
 import * as play from "./play.js";
 import * as queue from "./queue.js";
@@ -15,6 +16,7 @@ import * as speed from "./speed.js";
 import * as stop from "./stop.js";
 import * as version from "./version.js";
 import * as volume from "./volume.js";
+import * as web from "./web.js";
 
 export default {
   fx,
@@ -22,6 +24,7 @@ export default {
   move,
   next,
   now,
+  nowplaying,
   pause,
   play,
   queue,
@@ -34,4 +37,5 @@ export default {
   stop,
   version,
   volume,
+  web,
 };
