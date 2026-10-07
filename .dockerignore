@@ -1,4 +1,8 @@
-**
-!package*.json
-!src
-!tsconfig*.json
+node_modules
+dist
+.git
+.gitignore
+README.md
+.env
+.env.*
+*.log
