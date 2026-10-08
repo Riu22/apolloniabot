@@ -20,11 +20,11 @@ FROM node:22-slim AS production
 
 ARG TARGETARCH
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends ffmpeg wget && \
+    apt-get install -y --no-install-recommends ffmpeg curl ca-certificates && \
     if [ "$TARGETARCH" = "arm64" ]; then \
-        wget -q -O /usr/local/bin/yt-dlp "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux_aarch64"; \
+        curl -fSL "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux_aarch64" -o /usr/local/bin/yt-dlp; \
     else \
-        wget -q -O /usr/local/bin/yt-dlp "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux"; \
+        curl -fSL "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp" -o /usr/local/bin/yt-dlp; \
     fi && \
     chmod a+rx /usr/local/bin/yt-dlp && \
     apt-get clean && \
