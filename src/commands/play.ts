@@ -70,7 +70,7 @@ export const buildControlPanel = (paused = false, shuffleEnabled = false) => {
       .setEmoji("🔀")
       .setStyle(shuffleEnabled ? ButtonStyle.Success : ButtonStyle.Secondary),
     new ButtonBuilder()
-      .setCustomId("/volume volume:")
+      .setCustomId("/volume")
       .setEmoji("🔊")
       .setStyle(ButtonStyle.Secondary),
     new ButtonBuilder()

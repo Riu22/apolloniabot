@@ -32,7 +32,7 @@ export const execute = async function (
           )}`,
         ),
       ],
-      components: [buildControlPanel(false)],
+      components: buildControlPanel(false),
     });
   }
 
@@ -57,6 +57,6 @@ export const execute = async function (
         )} at ${queue.formattedCurrentTime}`,
       ),
     ],
-    components: [buildControlPanel(true)],
+    components: buildControlPanel(true),
   });
 };

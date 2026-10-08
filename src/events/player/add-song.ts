@@ -41,6 +41,6 @@ export const listener = async function (queue: Queue, song: Song) {
         )
         .setThumbnail(song.thumbnail || null),
     ],
-    components: [buildControlPanel(queue.paused)],
+    components: buildControlPanel(queue.paused),
   });
 };

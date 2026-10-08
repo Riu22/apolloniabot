@@ -56,6 +56,6 @@ export const execute = async function (
         .setThumbnail(song.thumbnail || null)
         .setColor(Colors.Blurple),
     ],
-    components: [buildControlPanel(queue.paused)],
+    components: buildControlPanel(queue.paused),
   });
 };
