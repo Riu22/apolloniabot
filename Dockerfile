@@ -34,9 +34,11 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 
-RUN npm ci --omit=dev
+COPY --from=builder /usr/src/app/node_modules ./node_modules
 
 COPY --from=builder /usr/src/app/dist ./dist
+
+RUN npm prune --production
 
 USER node
 
